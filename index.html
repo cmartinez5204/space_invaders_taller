@@ -3,121 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Invaders</title>
+    <title>Space Invaders — Juego</title>
+
+    <!-- ============================================================
+         dsescomenta esta linea del css
+         <link rel="stylesheet" href="css/styles.css">
+         ============================================================ -->
 </head>
 <body>
 
-    <!-- ENCABEZADO -->
-    <header class="encabezado">
-        <h1 class="titulo-principal">SPACE INVADERS</h1>
-        <p class="subtitulo">Defiende la Tierra de la invasión alienígena</p>
-
-        <nav class="menu-navegacion">
-            <ul>
-                <li><a href="#inicio">Inicio</a></li>
-                <li><a href="#como-jugar">Cómo jugar</a></li>
-                <li><a href="#controles">Controles</a></li>
-                <li><a href="#creditos">Créditos</a></li>
-            </ul>
-        </nav>
+    <!-- BARRA SUPERIOR / HUD  (el JS actualiza estos valores) -->
+    <header id="hud" class="hud">
+        <div class="hud-item">Puntaje: <span id="puntaje">0</span></div>
+        <div class="hud-item">Nivel: <span id="nivel">1</span></div>
+        <div class="hud-item">Vidas: <span id="vidas">3</span></div>
     </header>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <main>
+    <!-- ZONA DEL JUEGO -->
+    <main id="zona-juego" class="zona-juego">
 
-        <!-- SECCIÓN DE INICIO / PRESENTACIÓN -->
-        <section id="inicio" class="seccion-hero">
-            <h2>¡La galaxia te necesita!</h2>
-            <p>
-                Una flota de invasores desciende desde el espacio.
-                Toma el control de tu nave, dispara y detén la invasión
-                antes de que sea demasiado tarde.
-            </p>
-            <button id="boton-jugar" class="boton boton-principal">JUGAR AHORA</button>
-        </section>
+        <!-- Pantalla de inicio (el JS la muestra/oculta) -->
+        <div id="pantalla-inicio" class="pantalla pantalla-inicio">
+            <h1 class="titulo-juego">SPACE INVADERS</h1>
+            <button id="boton-iniciar" class="boton">INICIAR</button>
+        </div>
 
-        <!-- SECCIÓN DEL JUEGO -->
-        <section id="area-juego" class="seccion-juego">
-            <h2>Zona de combate</h2>
+        <!-- Lienzo principal: aqui game.js dibuja jugador, enemigos y balas -->
+        <canvas id="lienzo-juego" class="lienzo" width="600" height="700">
+            Tu navegador no soporta el elemento canvas.
+        </canvas>
 
-            <div class="marcador">
-                <p>Puntaje: <span id="puntaje">0</span></p>
-                <p>Nivel: <span id="nivel">1</span></p>
-                <p>Vidas: <span id="vidas">3</span></p>
-            </div>
-
-            <!-- El compañero de JS dibujará y controlará el juego sobre este canvas -->
-            <canvas id="lienzo-juego" class="lienzo" width="600" height="400">
-                Tu navegador no soporta el elemento canvas.
-            </canvas>
-
-            <div class="controles-juego">
-                <button id="boton-iniciar" class="boton">Iniciar</button>
-                <button id="boton-pausar" class="boton">Pausar</button>
-                <button id="boton-reiniciar" class="boton">Reiniciar</button>
-            </div>
-        </section>
-
-        <!-- SECCIÓN CÓMO JUGAR -->
-        <section id="como-jugar" class="seccion-instrucciones">
-            <h2>Cómo jugar</h2>
-            <ol>
-                <li>Mueve tu nave de izquierda a derecha.</li>
-                <li>Dispara a los invasores antes de que lleguen abajo.</li>
-                <li>Esquiva los disparos enemigos.</li>
-                <li>Elimina toda la flota para pasar al siguiente nivel.</li>
-            </ol>
-        </section>
-
-        <!-- SECCIÓN CONTROLES -->
-        <section id="controles" class="seccion-controles">
-            <h2>Controles</h2>
-            <table class="tabla-controles">
-                <thead>
-                    <tr>
-                        <th>Tecla</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Flecha izquierda</td>
-                        <td>Mover nave a la izquierda</td>
-                    </tr>
-                    <tr>
-                        <td>Flecha derecha</td>
-                        <td>Mover nave a la derecha</td>
-                    </tr>
-                    <tr>
-                        <td>Barra espaciadora</td>
-                        <td>Disparar</td>
-                    </tr>
-                    <tr>
-                        <td>Tecla P</td>
-                        <td>Pausar el juego</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <!-- SECCIÓN CRÉDITOS -->
-        <section id="creditos" class="seccion-creditos">
-            <h2>Créditos</h2>
-            <p>Proyecto desarrollado de forma colaborativa por el equipo:</p>
-            <ul>
-                <li>Emmanuel Morillo — Estructura HTML</li>
-                <li>Jhonatan Marimon — Estilos CSS</li>
-                <li>Juan Miguel Cabarcas — Interactividad JavaScript</li>
-                <li>Camilo A. Martienz  — Integración y despliegue</li>
-            </ul>
-        </section>
+        <!-- Pantalla de fin de juego (el JS la muestra al perder) -->
+        <div id="pantalla-game-over" class="pantalla pantalla-game-over" hidden>
+            <h2>GAME OVER</h2>
+            <p>Puntaje final: <span id="puntaje-final">0</span></p>
+            <button id="boton-reiniciar" class="boton">VOLVER A JUGAR</button>
+        </div>
 
     </main>
 
-    <!-- PIE DE PÁGINA -->
-    <footer class="pie-pagina">
-        <p>&copy; 2026 Space Invaders — Proyecto académico colaborativo</p>
+    <!-- CONTROLES EN PANTALLA  (el JS escucha estos botones) -->
+    <footer id="controles-juego" class="controles-juego">
+        <button id="boton-izquierda" class="boton-control">&#9668; Izquierda</button>
+        <button id="boton-disparar" class="boton-control">Disparar</button>
+        <button id="boton-derecha" class="boton-control">Derecha &#9658;</button>
+        <button id="boton-pausar" class="boton-control">Pausa</button>
     </footer>
+
+    <!-- Enlace de regreso al menu principal -->
+    <nav class="navegacion-juego">
+        <a href="homepage.html">&#8592; Volver al inicio</a>
+    </nav>
+
+    <!-- SPRITES: imagenes que el JS cargara para dibujar en el canvas -->
+    <img id="sprite-jugador" src="assets/player.png" alt="Nave del jugador" hidden>
+    <img id="sprite-enemigo" src="assets/enemy.png" alt="Invasor alienigena" hidden>
+
+    <!-- ============================================================
+        descomenta esto a la hora de poner el js y css
+         <script src="js/player.js"></script>
+         <script src="js/enemy.js"></script>
+         <script src="js/bullets.js"></script>
+         <script src="js/game.js"></script>
+         ============================================================ -->
 
 </body>
 </html>
