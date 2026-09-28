@@ -1,0 +1,669 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Chakra+Petch:wght@500;600&family=IBM+Plex+Sans:wght@400;500&display=swap");
+
+:root {
+    --vacio: #05060F;
+    --vacio-2: #070A1C;
+    --nebulosa: #161B3D;
+    --azul: #5B8CFF;
+    --violeta: #9D7BFF;
+    --blanco: #E8ECFF;
+    --polvo: #8A93B8;
+    --magenta: #FF5C7A;
+
+    --panel: rgba(22, 27, 61, 0.42);
+    --borde: rgba(232, 236, 255, 0.08);
+    --borde-azul: rgba(91, 140, 255, 0.38);
+
+    --f-pixel: "Press Start 2P", monospace;
+    --f-display: "Chakra Petch", system-ui, sans-serif;
+    --f-texto: "IBM Plex Sans", system-ui, sans-serif;
+
+    --radio: 6px;
+
+    /* Velocidad del avance: duracion de un "mosaico" de estrellas por capa */
+    --vel-lejos: 28s;
+    --vel-medio: 22s;
+    --vel-cerca: 18s;
+
+    color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+    scroll-behavior: smooth;
+    scrollbar-color: var(--nebulosa) var(--vacio);
+    /* Cielo: dos nebulosas muy difusas sobre un negro azulado */
+    background:
+        radial-gradient(ellipse 60% 45% at 80% 15%, rgba(157, 123, 255, 0.13), transparent 70%),
+        radial-gradient(ellipse 55% 50% at 12% 88%, rgba(91, 140, 255, 0.10), transparent 70%),
+        linear-gradient(180deg, var(--vacio) 0%, var(--vacio-2) 100%);
+    background-attachment: fixed;
+    background-color: var(--vacio);
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: transparent;
+    color: var(--blanco);
+    font-family: var(--f-texto);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+::selection {
+    background: rgba(157, 123, 255, 0.45);
+    color: #fff;
+}
+
+a {
+    color: var(--azul);
+}
+
+:focus-visible {
+    outline: 2px solid var(--azul);
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+
+html::before,
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-repeat: repeat;
+    will-change: transform;
+}
+
+/* Capa lejana: muchas, diminutas y tenues */
+html::before {
+    top: -260px;
+    background-size: 260px 260px;
+    background-image:
+        radial-gradient(circle 0.8px at 8% 12%, rgba(200, 210, 255, 0.55), transparent),
+        radial-gradient(circle 0.8px at 27% 64%, rgba(200, 210, 255, 0.45), transparent),
+        radial-gradient(circle 0.8px at 44% 31%, rgba(200, 210, 255, 0.50), transparent),
+        radial-gradient(circle 0.8px at 61% 83%, rgba(200, 210, 255, 0.40), transparent),
+        radial-gradient(circle 0.8px at 73% 9%, rgba(200, 210, 255, 0.50), transparent),
+        radial-gradient(circle 0.8px at 88% 52%, rgba(200, 210, 255, 0.45), transparent),
+        radial-gradient(circle 0.8px at 16% 91%, rgba(200, 210, 255, 0.40), transparent),
+        radial-gradient(circle 0.8px at 95% 74%, rgba(200, 210, 255, 0.35), transparent);
+    animation: avance-lejos var(--vel-lejos) linear infinite;
+}
+
+body::before {
+    top: -380px;
+    background-size: 380px 380px;
+    background-image:
+        radial-gradient(circle 1.1px at 14% 22%, rgba(232, 236, 255, 0.75), transparent),
+        radial-gradient(circle 1.1px at 52% 58%, rgba(232, 236, 255, 0.65), transparent),
+        radial-gradient(circle 1.1px at 79% 14%, rgba(190, 205, 255, 0.70), transparent),
+        radial-gradient(circle 1.1px at 36% 86%, rgba(232, 236, 255, 0.60), transparent),
+        radial-gradient(circle 1.1px at 90% 69%, rgba(210, 195, 255, 0.65), transparent);
+    animation: avance-medio var(--vel-medio) linear infinite;
+}
+
+/* Capa cercana: pocas, brillantes, con un halo minimo */
+body::after {
+    top: -560px;
+    background-size: 560px 560px;
+    background-image:
+        radial-gradient(circle 1.6px at 22% 38%, #fff, transparent),
+        radial-gradient(circle 5px at 22% 38%, rgba(91, 140, 255, 0.22), transparent),
+        radial-gradient(circle 1.5px at 71% 77%, #fff, transparent),
+        radial-gradient(circle 5px at 71% 77%, rgba(157, 123, 255, 0.22), transparent),
+        radial-gradient(circle 1.3px at 58% 6%, rgba(255, 255, 255, 0.9), transparent);
+    animation: avance-cerca var(--vel-cerca) linear infinite;
+}
+
+@keyframes avance-lejos {
+    to { transform: translateY(260px); }
+}
+
+@keyframes avance-medio {
+    to { transform: translateY(380px); }
+}
+
+@keyframes avance-cerca {
+    to { transform: translateY(560px); }
+}
+
+/* Estrella fugaz: invisible casi todo el ciclo, cruza en ~1 s cada 17 s */
+html::after {
+    content: "";
+    position: fixed;
+    top: 12vh;
+    left: 78vw;
+    z-index: -1;
+    width: 140px;
+    height: 1px;
+    pointer-events: none;
+    border-radius: 1px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.95), rgba(157, 123, 255, 0.4) 35%, transparent);
+    opacity: 0;
+    transform: rotate(-35deg) translateX(0);
+    transform-origin: left center;
+    animation: estrella-fugaz 17s ease-in 6s infinite;
+}
+
+@keyframes estrella-fugaz {
+    0%, 93% {
+        opacity: 0;
+        transform: rotate(145deg) translateX(0);
+    }
+    94% {
+        opacity: 1;
+    }
+    99% {
+        opacity: 0;
+        transform: rotate(145deg) translateX(-38vw);
+    }
+    100% {
+        opacity: 0;
+        transform: rotate(145deg) translateX(-38vw);
+    }
+}
+
+h1,
+h2 {
+    margin: 0;
+    font-weight: 600;
+}
+
+h2 {
+    font-family: var(--f-display);
+    font-size: 1.6rem;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    color: var(--blanco);
+}
+
+.titulo-principal,
+.titulo-juego {
+    font-family: var(--f-pixel);
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: 0.04em;
+    background: linear-gradient(180deg, #fff 20%, #B9C9FF 55%, var(--violeta) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter:
+        drop-shadow(0 0 10px rgba(91, 140, 255, 0.35))
+        drop-shadow(0 0 28px rgba(157, 123, 255, 0.18));
+}
+
+.boton {
+    display: inline-block;
+    padding: 0.9rem 2rem;
+    border: 1px solid var(--borde-azul);
+    border-radius: var(--radio);
+    background: linear-gradient(180deg, rgba(91, 140, 255, 0.22), rgba(157, 123, 255, 0.14));
+    color: var(--blanco);
+    font-family: var(--f-display);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.25s ease, background-color 0.2s ease, transform 0.1s ease;
+}
+
+.boton:hover,
+.boton:focus-visible {
+    border-color: var(--azul);
+    box-shadow:
+        0 0 0 1px rgba(91, 140, 255, 0.25),
+        0 0 22px rgba(91, 140, 255, 0.35),
+        inset 0 0 12px rgba(91, 140, 255, 0.15);
+}
+
+.boton:active {
+    transform: translateY(1px);
+}
+
+/* --------------------------------------------------------------------------
+    HOMEPAGE
+   -------------------------------------------------------------------------- */
+.encabezado {
+    padding: clamp(3.5rem, 12vh, 7rem) 16px 1.5rem;
+    text-align: center;
+}
+
+.titulo-principal {
+    font-size: clamp(1.5rem, 6vw, 3.4rem);
+    animation: aparicion 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes aparicion {
+    from {
+        opacity: 0;
+        letter-spacing: 0.22em;
+        filter: blur(6px);
+    }
+    to {
+        opacity: 1;
+        letter-spacing: 0.04em;
+    }
+}
+
+.subtitulo {
+    margin: 1.25rem auto 0;
+    max-width: 36ch;
+    color: var(--polvo);
+    font-size: 1.05rem;
+}
+
+.menu-navegacion ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem 1.75rem;
+    margin: 2.25rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.menu-navegacion a {
+    display: inline-block;
+    padding: 0.35rem 0.1rem;
+    color: var(--polvo);
+    font-family: var(--f-display);
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    background: linear-gradient(var(--azul), var(--azul)) no-repeat left bottom / 0 1px;
+    transition: color 0.2s ease, background-size 0.3s ease;
+}
+
+.menu-navegacion a:hover,
+.menu-navegacion a:focus-visible {
+    color: var(--blanco);
+    background-size: 100% 1px;
+}
+
+body:has(.seccion-hero) main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: min(680px, 100% - 32px);
+    margin: 0 auto;
+    padding-bottom: 4rem;
+}
+
+.seccion-hero {
+    padding: 2.5rem 0 4rem;
+    text-align: center;
+    scroll-margin-top: 2rem;
+}
+
+.seccion-hero h2 {
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+}
+
+.seccion-hero p {
+    max-width: 52ch;
+    margin: 1rem auto 2.25rem;
+    color: var(--polvo);
+    font-size: 1.05rem;
+}
+
+.boton-principal {
+    padding: 1rem 2.5rem;
+}
+
+.seccion-instrucciones,
+.seccion-controles,
+.seccion-creditos {
+    padding: 2rem clamp(1.25rem, 4vw, 2.25rem);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background: var(--panel);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    scroll-margin-top: 2rem;
+}
+
+.seccion-instrucciones h2,
+.seccion-controles h2,
+.seccion-creditos h2 {
+    margin-bottom: 1.25rem;
+}
+
+.seccion-instrucciones ol {
+    counter-reset: paso;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.seccion-instrucciones li {
+    counter-increment: paso;
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    align-items: baseline;
+    padding: 0.55rem 0;
+    border-top: 1px solid var(--borde);
+}
+
+.seccion-instrucciones li:first-child {
+    border-top: 0;
+}
+
+.seccion-instrucciones li::before {
+    content: counter(paso);
+    color: var(--azul);
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.tabla-controles {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-controles th {
+    padding: 0 0 0.6rem;
+    color: var(--polvo);
+    font-family: var(--f-display);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: left;
+    border-bottom: 1px solid var(--borde-azul);
+}
+
+.tabla-controles td {
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--borde);
+    vertical-align: middle;
+}
+
+.tabla-controles tr:last-child td {
+    border-bottom: 0;
+}
+
+.tabla-controles td:first-child {
+    width: 45%;
+    padding-right: 1rem;
+    font-family: var(--f-display);
+    font-weight: 500;
+    color: var(--blanco);
+}
+
+.tabla-controles td:last-child {
+    color: var(--polvo);
+}
+
+/* Creditos */
+.seccion-creditos p {
+    margin: 0 0 1rem;
+    color: var(--polvo);
+}
+
+.seccion-creditos ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.seccion-creditos li {
+    padding: 0.4rem 0 0.4rem 1rem;
+    border-left: 1px solid var(--borde-azul);
+}
+
+.pie-pagina {
+    padding: 2rem 16px 2.5rem;
+    color: var(--polvo);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.pie-pagina p {
+    margin: 0;
+}
+
+
+/* --------------------------------------------------------------------------
+   JUEGO
+   -------------------------------------------------------------------------- */
+body:has(#zona-juego) {
+    /* Ancho del escenario: nunca mas de 600px, cabe en la pantalla y
+       respeta la proporcion 6:7 del canvas */
+    --escenario: min(600px, 100vw - 32px, (100dvh - 150px) * 6 / 7);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1rem 16px 1.25rem;
+}
+
+.hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    width: var(--escenario);
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--panel);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    color: var(--polvo);
+    font-family: var(--f-display);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.hud-item span {
+    margin-left: 0.35rem;
+    color: var(--blanco);
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+#puntaje {
+    display: inline-block;
+    min-width: 5ch;
+}
+
+.zona-juego {
+    position: relative;
+    width: var(--escenario);
+}
+
+.lienzo {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 6 / 7;
+    border: 1px solid var(--borde-azul);
+    border-radius: var(--radio);
+    background:
+        radial-gradient(ellipse 80% 60% at 50% 110%, rgba(91, 140, 255, 0.08), transparent 70%),
+        rgba(5, 6, 15, 0.35);
+    box-shadow:
+        0 0 0 1px rgba(5, 6, 15, 0.8),
+        0 0 36px rgba(91, 140, 255, 0.12),
+        inset 0 0 40px rgba(91, 140, 255, 0.06);
+}
+
+/* Pantallas superpuestas (inicio / game over) */
+.pantalla {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.75rem;
+    padding: 1.5rem;
+    border-radius: var(--radio);
+    background: rgba(5, 6, 15, 0.7);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    text-align: center;
+}
+
+/* Sin esto, display:flex anularia el atributo hidden */
+.pantalla[hidden] {
+    display: none;
+}
+
+.titulo-juego {
+    margin: 0;
+    font-size: clamp(1.2rem, 5.5vw, 2.1rem);
+}
+
+.pantalla-game-over h2 {
+    font-family: var(--f-pixel);
+    font-size: clamp(1.4rem, 6vw, 2.4rem);
+    font-weight: 400;
+    color: var(--magenta);
+    text-shadow:
+        0 0 12px rgba(255, 92, 122, 0.45),
+        0 0 32px rgba(255, 92, 122, 0.2);
+}
+
+.pantalla-game-over p {
+    margin: 0;
+    color: var(--polvo);
+    font-family: var(--f-display);
+    font-size: 1.1rem;
+}
+
+#puntaje-final {
+    color: var(--blanco);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Controles tactiles */
+.controles-juego {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr 1fr;
+    grid-template-areas:
+        "izq disparo der"
+        "pausa pausa pausa";
+    gap: 0.5rem;
+    width: var(--escenario);
+}
+
+#boton-izquierda { grid-area: izq; }
+#boton-disparar  { grid-area: disparo; }
+#boton-derecha   { grid-area: der; }
+#boton-pausar    { grid-area: pausa; }
+
+.boton-control {
+    min-height: 3.25rem;
+    padding: 0.5rem;
+    border: 1px solid var(--borde-azul);
+    border-radius: var(--radio);
+    background: var(--panel);
+    color: var(--blanco);
+    font-family: var(--f-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+}
+
+.boton-control:active {
+    background: rgba(91, 140, 255, 0.28);
+    box-shadow: 0 0 18px rgba(91, 140, 255, 0.3);
+}
+
+#boton-disparar {
+    border-color: var(--violeta);
+    background: rgba(157, 123, 255, 0.16);
+}
+
+#boton-pausar {
+    min-height: 2.5rem;
+    color: var(--polvo);
+    font-weight: 500;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .controles-juego {
+        display: none;
+    }
+}
+
+@media (pointer: coarse) {
+    body:has(#zona-juego) {
+        /* Reserva espacio para los botones tactiles */
+        --escenario: min(600px, 100vw - 32px, (100dvh - 290px) * 6 / 7);
+    }
+}
+
+.navegacion-juego a {
+    color: var(--polvo);
+    font-family: var(--f-display);
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.navegacion-juego a:hover,
+.navegacion-juego a:focus-visible {
+    color: var(--blanco);
+}
+
+
+/* --------------------------------------------------------------------------
+   esponsive y accesibilidad
+   -------------------------------------------------------------------------- */
+@media (max-width: 480px) {
+    .hud {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .hud-item span {
+        font-size: 1rem;
+    }
+
+    .tabla-controles td:first-child {
+        width: 50%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    html::before,
+    body::before,
+    body::after,
+    .titulo-principal {
+        animation: none;
+    }
+
+    html::after {
+        display: none;
+    }
+}
